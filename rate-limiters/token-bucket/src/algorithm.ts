@@ -1,3 +1,7 @@
+import { Mutex } from 'async-mutex';
+
+const mutex = new Mutex();
+
 const configuration = {
   bucket: {
     capacity: 5,
@@ -13,13 +17,23 @@ export const bucket = {
   lastRefresh: Date.now(),
 };
 
-setInterval(() => {
-  const currentRefresh = Date.now();
-  const timeElapsed = currentRefresh - bucket.lastRefresh;
+const refreshTokens = async () => {
+  const release = await mutex.acquire();
 
-  if (timeElapsed >= configuration.refill.refreshRate && bucket.tokens < configuration.bucket.capacity) {
-    bucket.tokens = Math.min(bucket.tokens + configuration.refill.tokens, configuration.bucket.capacity);
-    bucket.lastRefresh = currentRefresh;
-    console.log(`[algorithm][INFO] Tokens refreshed at ${new Date().toISOString()}. Tokens available: ${bucket.tokens}`);
+  try {
+    const currentRefresh = Date.now();
+    const timeElapsed = currentRefresh - bucket.lastRefresh;
+
+    if (timeElapsed >= configuration.refill.refreshRate && bucket.tokens < configuration.bucket.capacity) {
+      bucket.tokens = Math.min(bucket.tokens + configuration.refill.tokens, configuration.bucket.capacity);
+      bucket.lastRefresh = currentRefresh;
+      console.log(`[algorithm][INFO] Tokens refreshed at ${new Date().toISOString()}. Tokens available: ${bucket.tokens}`);
+    }
+  } finally {
+    release();
   }
-}, configuration.refill.refreshRate);
+
+  setTimeout(refreshTokens, configuration.refill.refreshRate);
+};
+
+refreshTokens();
