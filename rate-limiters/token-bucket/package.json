@@ -1,0 +1,34 @@
+{
+  "name": "token-bucket",
+  "version": "1.0.0",
+  "description": "Implementation of the Token Bucket Algorithm.",
+  "main": "index.js",
+  "scripts": {
+    "start:build": "tsc",
+    "start:development": "nodemon src/app.ts"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/sudo-von/design-systems.git"
+  },
+  "keywords": [
+    "design-systems",
+    "token-bucket"
+  ],
+  "author": "Jesús Ángel Rodríguez Martínez",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/sudo-von/design-systems/issues"
+  },
+  "homepage": "https://github.com/sudo-von/design-systems#readme",
+  "devDependencies": {
+    "nodemon": "^3.1.9",
+    "typescript": "^5.8.2"
+  },
+  "dependencies": {
+    "@types/express": "^5.0.0",
+    "@types/node": "^22.13.9",
+    "express": "^4.21.2",
+    "ts-node": "^10.9.2"
+  }
+}
